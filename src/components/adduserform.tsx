@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Modal } from 'antd';
-import { SaveOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Modal} from 'antd';
+import { SaveOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const layout = {
@@ -15,14 +15,14 @@ const tailLayout = {
 const AddUserForm: React.FC = () => {
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [zipcode, setZipcode] = useState("");
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [mobile, setMobile] = useState<string>("");
+  const [street, setStreet] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [zipcode, setZipcode] = useState<string>("");
 
   const handleNextSection = () => {
     navigate('/experience');
@@ -43,17 +43,19 @@ const AddUserForm: React.FC = () => {
     });
   };
 
-  const onFinish = () => {
+  const onFinish = (values: any) => {
     setItemsToLocalStorage();
   };
+
+
 
   return (
     <>
       {contextHolder}
       <Form {...layout} name="userform" 
-      initialValues={{ remember: true }} 
-      onFinish={onFinish} 
-      style={{ maxWidth: '600px', margin: '0 auto' }}>
+        initialValues={{ remember: true }} 
+        onFinish={onFinish} 
+        style={{ maxWidth: '600px', margin: '0 auto' }}>
         <Form.Item
           label="Full Name"
           name="fullName"
@@ -143,8 +145,7 @@ const AddUserForm: React.FC = () => {
             onChange={(event) => setZipcode(event.target.value)}
           />
         </Form.Item>
-
-        <Form.Item  {...tailLayout}>
+        <Form.Item {...tailLayout}>
           <Button
             type="primary"
             icon={<SaveOutlined />}

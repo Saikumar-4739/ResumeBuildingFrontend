@@ -1,7 +1,8 @@
+// src/pages/AddAcademicsForm.tsx
 import React, { useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { SaveOutlined,ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { SaveOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 const layout = {
   labelCol: { span: 8 },
@@ -15,12 +16,21 @@ export const AddAcademicsForm: React.FC = () => {
   const [form] = Form.useForm();
   const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
+  const [institutionName, setInstitutionName] = useState('');
+  const [passingYear, setPassingYear] = useState('');
+  const [qualification, setQualification] = useState('');
+  const [university, setUniversity] = useState('');
+  const [percentage, setPercentage] = useState('');
 
-  const setItemsToLocalStorage = (values: any) => {
-    localStorage.setItem('academics', JSON.stringify(values));
+  const setItemsToLocalStorage = () => {
+    localStorage.setItem('institutionName', institutionName);
+    localStorage.setItem('passingYear', passingYear);
+    localStorage.setItem('qualification', qualification);
+    localStorage.setItem('university', university);
+    localStorage.setItem('percentage', percentage);
     notification.success({
-      message: 'Data Saved',
-      description: 'Data saved locally. Click on the next page to continue.',
+      message: 'Success',
+      description: 'Data saved successfully! Click on Next Section.',
     });
     setIsSaved(true);
   };
@@ -30,8 +40,8 @@ export const AddAcademicsForm: React.FC = () => {
       navigate('/skills');
     } else {
       notification.warning({
-        message: 'Data not saved',
-        description: 'Please save the data before proceeding to the next section.',
+        message: 'Warning',
+        description: 'Please save the details before proceeding to the next section.',
       });
     }
   };
@@ -40,25 +50,22 @@ export const AddAcademicsForm: React.FC = () => {
     navigate('/experience');
   };
 
-  const onFinish = (values: any) => {
-    setItemsToLocalStorage(values);
-  };
-
   return (
     <Form
       {...layout}
       form={form}
       name="academics"
-      onFinish={onFinish}
       initialValues={{ remember: true }}
-      style={{ maxWidth: '600px', margin: '0 auto' }}
     >
       <Form.Item
         label="Institution Name"
         name="institutionName"
         rules={[{ required: true, message: 'Please input your institution name!' }]}
       >
-        <Input type='text' />
+        <Input
+          value={institutionName}
+          onChange={(event) => setInstitutionName(event.target.value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -66,7 +73,11 @@ export const AddAcademicsForm: React.FC = () => {
         name="passingYear"
         rules={[{ required: true, message: 'Please input your passing year!' }]}
       >
-        <Input type="number" />
+        <Input
+          type="number"
+          value={passingYear}
+          onChange={(event) => setPassingYear(event.target.value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -74,7 +85,10 @@ export const AddAcademicsForm: React.FC = () => {
         name="qualification"
         rules={[{ required: true, message: 'Please input your qualification!' }]}
       >
-        <Input />
+        <Input
+          value={qualification}
+          onChange={(event) => setQualification(event.target.value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -82,7 +96,10 @@ export const AddAcademicsForm: React.FC = () => {
         name="university"
         rules={[{ required: true, message: 'Please input your university!' }]}
       >
-        <Input />
+        <Input
+          value={university}
+          onChange={(event) => setUniversity(event.target.value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -90,17 +107,35 @@ export const AddAcademicsForm: React.FC = () => {
         name="percentage"
         rules={[{ required: true, message: 'Please input your percentage!' }]}
       >
-        <Input type="number" />
+        <Input
+          type="number"
+          value={percentage}
+          onChange={(event) => setPercentage(event.target.value)}
+        />
       </Form.Item>
 
       <Form.Item {...tailLayout}>
-      <Button type="default" icon={<ArrowLeftOutlined />} onClick={handlePreviousSection} style={{ marginRight: '10px' }}>
+        <Button
+          type="default"
+          onClick={handlePreviousSection}
+          icon={<ArrowLeftOutlined />}
+          style={{ marginRight: '10px' }}
+        >
           Previous Section
         </Button>
-        <Button type="primary" icon={<SaveOutlined />} onClick={() => form.submit()} style={{ marginRight: '10px' }}>
+        <Button
+          type="primary"
+          onClick={setItemsToLocalStorage}
+          icon={<SaveOutlined />}
+          style={{ marginRight: '10px' }}
+        >
           Save
         </Button>
-        <Button type="default" icon={<ArrowRightOutlined />} onClick={handleNextSection}>
+        <Button
+          type="default"
+          onClick={handleNextSection}
+          icon={<ArrowRightOutlined />}
+        >
           Next Section
         </Button>
       </Form.Item>

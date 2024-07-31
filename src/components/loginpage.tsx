@@ -1,4 +1,3 @@
-// src/components/LoginPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Typography } from 'antd';
@@ -15,11 +14,10 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     const { username, password } = values;
 
-    // Dummy login validation
     if (username === 'dummy@example.com' && password === 'password') {
-      localStorage.setItem('token', 'dummyToken'); // Store a dummy token in localStorage
-      localStorage.setItem('email', username); // Store the email in localStorage
-      navigate('/user-form'); // Redirect to user-form after login
+      localStorage.setItem('token', 'dummyToken'); 
+      localStorage.setItem('email', username); 
+      navigate('/user-form'); 
     } else {
       alert('Invalid username or password');
       setLoading(false);

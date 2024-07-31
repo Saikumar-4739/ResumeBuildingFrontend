@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Form } from "antd";
+import { Button, Input, Form, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
-  UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, BankOutlined,
-  IdcardOutlined, ProfileOutlined, CalendarOutlined, TrophyOutlined, FlagOutlined,
-  ReadOutlined, GlobalOutlined, SolutionOutlined,
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  BankOutlined,
+  IdcardOutlined,
+  ProfileOutlined,
+  CalendarOutlined,
+  TrophyOutlined,
+  FlagOutlined,
+  ReadOutlined,
+  GlobalOutlined,
+  SolutionOutlined,
   ArrowRightOutlined,
   SaveOutlined,
-  ArrowLeftOutlined
-} from '@ant-design/icons';
+  ArrowLeftOutlined,
+  PercentageOutlined,
+} from "@ant-design/icons";
 import "./css/previewresume.css";
+import axios from "axios";
 
 const { Item } = Form;
 
 const tailLayout = {
-  wrapperCol: { offset: 30 , span: 50},
+  wrapperCol: { offset: 30, span: 50 },
 };
 
 export const PreviewResume: React.FC = () => {
@@ -86,6 +98,80 @@ export const PreviewResume: React.FC = () => {
 
   const handleNextSection = () => {
     navigate("/download-page");
+  };
+
+  const handleSave = async () => {
+    try {
+      // Save user data
+      const userData = {
+        uname: fullName,
+        email,
+        mobile,
+        address: [{ street, city, state, country, zipcode }],
+      };
+
+      const userResponse = await axios.post(
+        "http://localhost:3023/users/createUser",
+        userData
+      );
+
+      const userId = userResponse.data.userId; // Assuming the response contains userId
+
+      // Save experience data
+      const experienceData = {
+        userId,
+        objective,
+        companyName,
+        role,
+        fromYear,
+        toYear,
+        description,
+      };
+      await axios.post("http://localhost:3023/experiences/createExp", experienceData);
+
+      // Save academic data
+      const academicData = {
+        userId,
+        institutionName,
+        passingYear,
+        qualification,
+        university,
+        percentage,
+      };
+      await axios.post("http://localhost:3023/academics/create", academicData);
+
+      // Save skill data
+      const skillData = {
+        userId,
+        skillName,
+        department,
+      };
+      await axios.post("http://localhost:3023/skills/createSkill", skillData);
+
+      // Save personal details
+      const personalDetailsData = {
+        userId,
+        fatherName,
+        motherName,
+        dateOfBirth,
+        maritalStatus,
+        languagesKnown,
+      };
+      await axios.post("http://localhost:3023/personal-details/create", personalDetailsData);
+
+      // Save declaration data
+      const declarationData = {
+        userId,
+        declaration,
+        place,
+      };
+      await axios.post("http://localhost:3023/declarations/create", declarationData);
+
+      message.success("Resume saved successfully");
+    } catch (error) {
+      message.error("Failed to save resume");
+      console.error("There was an error saving the resume!", error);
+    }
   };
 
   return (
@@ -187,7 +273,7 @@ export const PreviewResume: React.FC = () => {
         </Item>
         <Item label="Description">
           <Input
-            prefix={<ProfileOutlined />}
+            prefix={<SolutionOutlined />}
             value={description}
             onChange={(event) => setDescription(event.target.value)}
           />
@@ -222,21 +308,21 @@ export const PreviewResume: React.FC = () => {
         </Item>
         <Item label="Percentage">
           <Input
-            prefix={<SolutionOutlined />}
+            prefix={<PercentageOutlined />}
             value={percentage}
             onChange={(event) => setPercentage(event.target.value)}
           />
         </Item>
         <Item label="Skill Name">
           <Input
-            prefix={<TrophyOutlined />}
+            prefix={<ProfileOutlined />}
             value={skillName}
             onChange={(event) => setSkillName(event.target.value)}
           />
         </Item>
         <Item label="Department">
           <Input
-            prefix={<ReadOutlined />}
+            prefix={<IdcardOutlined />}
             value={department}
             onChange={(event) => setDepartment(event.target.value)}
           />
@@ -264,7 +350,7 @@ export const PreviewResume: React.FC = () => {
         </Item>
         <Item label="Marital Status">
           <Input
-            prefix={<CalendarOutlined />}
+            prefix={<IdcardOutlined />}
             value={maritalStatus}
             onChange={(event) => setMaritalStatus(event.target.value)}
           />
@@ -278,48 +364,42 @@ export const PreviewResume: React.FC = () => {
         </Item>
         <Item label="Declaration">
           <Input
-            prefix={<ProfileOutlined />}
+            prefix={<SolutionOutlined />}
             value={declaration}
             onChange={(event) => setDeclaration(event.target.value)}
           />
         </Item>
         <Item label="Place">
           <Input
-            prefix={<HomeOutlined />}
+            prefix={<GlobalOutlined />}
             value={place}
             onChange={(event) => setPlace(event.target.value)}
           />
         </Item>
-        <Item>
-          <Form.Item
-             {...tailLayout}
-            className="form-actions"
+        <Form.Item {...tailLayout}>
+          <Button
+            type="default"
+            icon={<ArrowLeftOutlined />}
+            onClick={handlePrevious}
           >
-            <Button
-              type="default"
-              icon={<ArrowLeftOutlined />}
-              onClick={handlePrevious}
-              style={{ marginRight: '10px' }}
-            >
-              Previous Section
-            </Button>
-            <Button
-              type="primary"
-              icon={<SaveOutlined />}
-              onClick={() => console.log("Save")}
-              style={{ marginRight: '10px' }}
-            >
-              Save
-            </Button>
-            <Button
-              type="default"
-              icon={<ArrowRightOutlined />}
-              onClick={handleNextSection}
-            >
-              Next Section
-            </Button>
-          </Form.Item>
-        </Item>
+            Previous Section
+          </Button>
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={handleSave}
+            style={{ margin: "0 8px" }}
+          >
+            Save
+          </Button>
+          <Button
+            type="default"
+            icon={<ArrowRightOutlined />}
+            onClick={handleNextSection}
+          >
+            Next Section
+          </Button>
+        </Form.Item>
       </Form>
     </div>
   );

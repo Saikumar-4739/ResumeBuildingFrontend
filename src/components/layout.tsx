@@ -9,9 +9,9 @@ import {
   SmileOutlined,
   FileDoneOutlined,
   EyeOutlined,
-  DownloadOutlined
+  DownloadOutlined,
 } from '@ant-design/icons';
-import "./css/layout.css";
+import './css/layout.css';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -95,7 +95,7 @@ const AppLayout: React.FC = () => {
       </Header>
       <Layout>
         {screens.md ? (
-          <Sider width={200} className="site-layout-background" style={{ background: '#fff' }}>
+          <Sider width={200} className="site-layout-background">
             {menuItems}
           </Sider>
         ) : (
@@ -116,6 +116,7 @@ const AppLayout: React.FC = () => {
               padding: 24,
               margin: 0,
               minHeight: 280,
+              background: '#fff',
             }}
           >
             <Outlet />
